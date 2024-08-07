@@ -1,4 +1,5 @@
-use std::{sync::Arc, time::Instant};
+use std::sync::Arc;
+use std::time::Instant;
 
 use colored::*;
 use drillx::{
@@ -110,7 +111,7 @@ impl Miner {
 
                             // Exit if time has elapsed
                             if nonce % 100 == 0 {
-                                if timer.elapsed().as_secs().ge(&cutoff_time) {
+                                if timer.elapsed().as_secs().ge(&**120**) { // Alterado de 60 para 120
                                     if best_difficulty.ge(&min_difficulty) {
                                         // Mine until min difficulty has been met
                                         break;
@@ -118,7 +119,7 @@ impl Miner {
                                 } else if i == 0 {
                                     progress_bar.set_message(format!(
                                         "Mining... ({} sec remaining)",
-                                        cutoff_time.saturating_sub(timer.elapsed().as_secs()),
+                                        **120**.saturating_sub(timer.elapsed().as_secs()), // Alterado de 60 para 120
                                     ));
                                 }
                             }
@@ -184,7 +185,7 @@ impl Miner {
         let clock = get_clock(&self.rpc_client).await;
         proof
             .last_hash_at
-            .saturating_add(60)
+            .saturating_add(**120**) // Alterado de 60 para 120, se isso estiver relacionado ao tempo total de busca
             .saturating_sub(buffer_time as i64)
             .saturating_sub(clock.unix_timestamp)
             .max(0) as u64
